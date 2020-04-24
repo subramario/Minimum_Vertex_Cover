@@ -1,4 +1,4 @@
-# Minimum_Vertex_Cover
+# Minimum Vertex Cover
 
 ## Purpose
 Solve the Minimum Vertex Cover problem for an undirected graph using a polynomial time reduction to CNF-SAT with the use of a SAT solver. 
