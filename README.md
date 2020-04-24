@@ -12,6 +12,14 @@ Solve the Minimum Vertex Cover problem for an undirected graph using a polynomia
 
 **Minimum Vertex Cover:** the smallest possible subset of vertices of an undirected graph such that every edge in the graph has at least one endpoint in the vertex cover.
 
+## Encoding
+
+![](clause_1.png)
+![](clause_2.png)
+![](clause_3.png)
+![](clause_4.png)
+![](clause_total.png)
+
 ## Project Setup
 Clone the MiniSAT repository into the top level directory of the project using:
 ```
