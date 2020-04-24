@@ -15,7 +15,7 @@ Solve the Minimum Vertex Cover problem for an undirected graph using a polynomia
 ## Encoding
 ![](clauses.png)
 
-**_Note:_** _encoding provided by the University of Waterloo, Department of Eletrical and Computer Engineering, Reza Babaee/Arie Gurfinkel_
+**_Note:_** _encoding provided by the University of Waterloo, Department of Electrical and Computer Engineering, Reza Babaee/Arie Gurfinkel_
 
 
 ## Project Setup
