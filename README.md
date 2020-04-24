@@ -14,6 +14,8 @@ Solve the Minimum Vertex Cover problem for an undirected graph using a polynomia
 
 ## Encoding
 ![](clauses.png)
+**_Note:_** _encoding provided by the University of Waterloo, Department of Eletrical and Computer Engineering, Reza Babaee/Arie Gurfinkel_
+
 
 ## Project Setup
 Clone the MiniSAT repository into the top level directory of the project using:
@@ -58,5 +60,4 @@ E {<0,4>,<4,1>,<0,3>,<3,4>,<3,2>,<1,3>}
 
 ![](MVC.PNG)
 
-
-**NOTE:** graphed using VisualGO: https://visualgo.net/en/mvc
+**_Note:_** _graphed using VisualGO:_ https://visualgo.net/en/mvc
