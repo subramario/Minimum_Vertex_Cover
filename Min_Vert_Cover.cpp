@@ -7,27 +7,28 @@
 #include <stack>
 #include <list>
 #include <memory>
-// defines Var and Lit
-#include "minisat/core/SolverTypes.h"
-// defines Solver
-#include "minisat/core/Solver.h"
+#include "minisat/core/SolverTypes.h" // Defines Var and Lit
+#include "minisat/core/Solver.h" // Defines Solver
 
 using namespace std; 
 
-void add_edge(vector<int> adj_list[], int u, int v){ //creates an adjacency list (ie. array of arrays)
+// Creates an adjacency list (ie. array of arrays)
+void add_edge(vector<int> adj_list[], int u, int v){ 
     adj_list[u].push_back(v); //add v into list u
     adj_list[v].push_back(u); //add u into list v
 }
 
 void minisat_reduction(int V, vector<int> adj_list[]){
     std::unique_ptr<Minisat::Solver> solver(new Minisat::Solver());
-    bool res = false; //initializing solver to be false
-    int k = 1; //Initialize minimum vertex cover as one
+    bool res = false; // Initializing solver to be false
+    int k = 1; // Initialize minimum vertex cover as one
 
     while(k < V){
-        //need to initialize my NxK atomic proposition matrix filled with literals
+
+        // Initialize atomic proposition matrix sized Vxk
         Minisat::Lit matrix[V][k];
 
+        // Populate each element in the atomic proposition matrix as a literal
         for (int x = 0; x < V; x++)
             for (int y = 0; y < k; y++){
                 Minisat::Lit literal;
@@ -36,9 +37,10 @@ void minisat_reduction(int V, vector<int> adj_list[]){
             }
         
 
-        //case 1
+        // Clause 1: At least one vertex is theith vertex in the vertex cover
         for (unsigned int i = 0; i < k; i++){ //for all i which exists from k=1 to k 
-            //minisat only accepts 4 arguments max for each addClause! If multiple literals exist, use one vector of literals
+
+            // MiniSAT only accepts 4 arguments max for each addClause! If multiple literals exist, use one vector of literals
             Minisat::vec<Minisat::Lit> clause_1;
             
             for (unsigned int j = 0; j < V; j++){
@@ -48,7 +50,7 @@ void minisat_reduction(int V, vector<int> adj_list[]){
             solver->addClause(clause_1);
         }
             
-        //case 2
+        // Clause 2: No one vertex can appear twice in a vertex cover
         for (unsigned int m = 0; m < V; m++){
             for (unsigned int p = 0; p < k; p++){
                 for (unsigned int q = 0; q < k; q++){
@@ -60,7 +62,7 @@ void minisat_reduction(int V, vector<int> adj_list[]){
         }
 
         
-        //case 3
+        // Clause 3: No more than one vertex appears in themth position of the vertex cover
         for (unsigned int m = 0; m < k; m++){
             for (unsigned int p = 0; p < V; p++){
                 for (unsigned int q = 0; q < V; q++){
@@ -71,7 +73,7 @@ void minisat_reduction(int V, vector<int> adj_list[]){
             }
         }
     
-        //case 4
+        // Clause 4: Every edge is incident to at least one vertex in the vertex cover
         for (unsigned int i = 0; i < V; i++){
             for (auto m: adj_list[i]){
                 
@@ -105,12 +107,11 @@ void minisat_reduction(int V, vector<int> adj_list[]){
                     if (Minisat::toInt(solver->modelValue(matrix[x][y])) == 0){
                         minimum.append(to_string(x) + " ");
 
-                        //cout << x << " ";
                     }
                 }
             }
 
-            // std::cout << "K value - " << k << endl;
+            // Outputs the Minimum Vertex Cover for the graph
             cout << minimum << endl;
         
 
@@ -126,36 +127,37 @@ void minisat_reduction(int V, vector<int> adj_list[]){
     }
 }
 
-//main function
 int main(int argc, char* argv[]){
-    //local variables declared here
+
    smatch m;
    string input;
    int a,b,c,V = 1;
    vector <int> *adj_list = NULL; //initializing adjacency list
 
-    //matches command input to appropriate loop
-   regex vert_rx("^[V]"); 
-   regex edge_rx("^[E]");
-   regex short_rx("^[s]");
+    // Matches command input to appropriate loop
+    regex vert_rx("^[V]"); 
+    regex edge_rx("^[E]");
+    regex short_rx("^[s]");
 
-   //extract relevant info from input
-   const regex numbers("([0-9]+)+");
-   const regex coordinates("([0-9]+[,][0-9]+)+");
+    // Extract relevant info from input
+    const regex numbers("([0-9]+)+");
+    const regex coordinates("([0-9]+[,][0-9]+)+");
 
-   while (!cin.eof()){ //eof allows program to exit gracefully 
+    while (!cin.eof()){ //eof allows program to exit gracefully 
         getline(cin, input);
 
         if (cin.eof())
             break;
 
+        // Executes this block of code if the number of vertices is specifed through the "V" command
         if (regex_search(input,m,vert_rx)){
             regex_search(input, m, numbers);
 
-            string temp = m[0];
-            a = stoi(temp);
+            string temp = m[0]; // Stores the match object in string "temp"
+            a = stoi(temp); // Converts the string to an integer
 
-            if (a == 0) //Error case for if vertice = 0
+            // Error case --> user specifies a graph with zero vertices
+            if (a == 0) 
                 cout << "Error: Graph cannot have zero vertices!" << endl;
             else
                 V = a;
@@ -163,11 +165,15 @@ int main(int argc, char* argv[]){
 
         getline(cin, input);
 
+        // Executes this block of code if the edge list is specifed through the "E" command
         if (regex_search(input,m,edge_rx)){
             adj_list = new vector<int>[V];
+
+            // Creates a match object, "m", with all edges parsed from user input using regex "coordinates"
             while (regex_search(input,m,coordinates)){
-                string s = m.str(0);
+                string s = m.str(0); // Parses one edge in the match object at a time
                 
+                // Extracts vertices from the edge coordinate
                 string delimiter_1 = ",";
                 string delimiter_2 = ">";
                 string token_1 = s.substr(0, s.find(delimiter_1));
@@ -175,60 +181,59 @@ int main(int argc, char* argv[]){
                 b = stoi(token_1);
                 c = stoi(token_2);
                 
-                if (b == c){ //Error case when an edge spec includes the same vertice twice
+                // Error case --> edge specification includes the same vertice twice
+                if (b == c){ 
                     cout << "Error: Cannot have an edge between a vertice and itself!" << endl;
                     break;
                 }
 
-                if (b >= V || c >= V){ //Error case when an edge spec includes a vertex higher than total number of vertices
+                // Error case --> edge specification includes a vertex higher than the total number of vertices in the graph
+                if (b >= V || c >= V){ 
                     cout << "Error: Cannot have an edge between non-existant vertices." << endl;
                     break;
                 }
 
-                bool flag_1 = false;
-                bool flag_2 = false;
+                bool duplication = false;
+                bool inverse_duplication = false;
 
-
-                for (unsigned int i = 0; i < adj_list[b].size(); i++){ //Error case for duplicate edges
+                // Error case --> duplicate edges
+                for (unsigned int i = 0; i < adj_list[b].size(); i++){ 
                     if (adj_list[b][i] == c){
                         cout << "Error: System does not allow duplicate edges." << endl;
-                        flag_1 = true;
+                        duplication = true;
                         break;
                     }
                 }
 
-                if (flag_1 == true)
+                if (duplication == true)
                     break;
 
-                for (unsigned int i = 0; i < adj_list[c].size(); i++){ //Error case for duplicate edges
+                // Error case --> inverse duplicate edges
+                for (unsigned int i = 0; i < adj_list[c].size(); i++){ 
                     if (adj_list[c][i] == b){
                         cout << "Error: System does not allow duplicate edges." << endl;
-                        flag_2 = true;
+                        inverse_duplication = true;
                         break;
                     }
                 }
 
-                if (flag_2 == true)
+                if (inverse_duplication == true)
                     break;
                 
-                if (flag_1 == false && flag_2 == false) //If the edge spec is valid, add it to the adjacency list
+                // If the edge specification is valid, add it to the adjacency list
+                if (duplication == false && inverse_duplication == false) 
                     add_edge(adj_list, b ,c);
 
                 input = m.suffix(); //Used to iterate through remaining edges
-
             }
-
         }
 
         if (adj_list->size() == 0)
              cout << endl;
         else{
             minisat_reduction(V, adj_list);
-        }
-
-        
+        }        
     }
-
    return 0;
 } 
     

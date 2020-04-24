@@ -4,7 +4,7 @@ project(Min_VC)
 if (EXISTS "${CMAKE_SOURCE_DIR}/minisat")
   add_subdirectory(minisat)
 else()
-  message (FATAL_ERROR "MiniSat not found. Use `git clone https://github.com/niklasso/minisat` to check it out.")
+  message (FATAL_ERROR "MiniSat not found. Use `git clone https://github.com/agurfinkel/minisat` to check it out.")
 endif()
 
 ## Project specific configurations go here
