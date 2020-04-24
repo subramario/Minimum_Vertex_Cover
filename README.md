@@ -3,6 +3,15 @@
 ## Purpose
 Solve the Minimum Vertex Cover problem for an undirected graph using a polynomial time reduction to CNF-SAT with the use of a SAT solver. 
 
+## Definitions
+**Undirected Graph:** a set of objects (called vertices or nodes) that are connected together, where all the edges are bidirectional.
+
+**Vertice:** the fundamental unit by which graphs are formed.
+
+**Edge:** a bidirectional line which connects an unordered pair of vertices together.
+
+**Minimum Vertex Cover:** the smallest possible subset of vertices of an undirected graph such that every edge in the graph has at least one endpoint in the vertex cover.
+
 ## Project Setup
 Clone the MiniSAT repository into the top level directory of the project using:
 ```
@@ -42,3 +51,9 @@ E {<0,4>,<4,1>,<0,3>,<3,4>,<3,2>,<1,3>}
 ```
 3 4
 ```
+**Graphical Representation:**
+
+![](MVC.PNG)
+
+
+**NOTE:** graphed using VisualGO: https://visualgo.net/en/mvc
